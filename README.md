@@ -1,2 +1,2 @@
 # pybo
-django practice
+Django practice
