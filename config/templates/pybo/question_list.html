@@ -1,0 +1,11 @@
+{% if list %} <!--question_list가 있다면-->
+    <ul>
+    {% for question in list %} <!--question_list를 순회하면서 하나씩 question에 대입-->
+        <li><a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>질문이 없습니다.</p>
+{% endif %}
+<!--question_list는 render함수로 전달한 질문 목록 데이터이다-->
+<a href="{% url 'pybo:question_create' %}" class="btn btn=primary">질문 등록하기</a>
