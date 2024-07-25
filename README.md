@@ -1,2 +1,2 @@
 # pybo
-Django practice
+Django 실습
