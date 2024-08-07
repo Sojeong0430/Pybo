@@ -1,13 +1,14 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 <h1>{{ question.subject }}</h1>
-글쓴이 : {{question.author}} <br>
+글쓴이 : {{question.author}} <br><br>
 <div>
     {{ question.content}}
 </div>
-
-{% if question.author == request.User%}
-<a href="{% url 'pybo:question_modify' question.id %}">수정하기</a>
+<br>
+{% if question.author == request.user%}
+<a href="{% url 'pybo:question_modify' question.id  %}">수정하기</a><br>
+<a href="{% url 'pybo:question_delete' question.id  %}">삭제하기</a>
 {%endif%}
 
 <h5>{{question.answer_set.count}}개의 답변이 있습니다.</h5>
