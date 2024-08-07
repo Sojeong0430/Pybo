@@ -1,7 +1,7 @@
 {% if list %} <!--question_list가 있다면-->
     <ul>
     {% for question in list %} <!--question_list를 순회하면서 하나씩 question에 대입-->
-        <li><a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a></li>
+        <li><a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a> / {{question.author}}</li>
     {% endfor %}
     </ul>
 {% else %}

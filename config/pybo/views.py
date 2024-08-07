@@ -1,8 +1,9 @@
 from django.shortcuts import render , get_object_or_404, redirect
 from .models import Question
 from django.utils import timezone
-from .forms import QuestionForm , Answerform
-
+from .forms import QuestionForm , AnswerForm
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 # Create your views here.
 
 def index(request):
@@ -19,15 +20,22 @@ def detail(request,question_id):
 #question = Question.object.get(id='question_id')
 #get 메서드는 주어진 조건에 맞는 객체를 하나만 반환한다. 여기서는 'id'필드가 'question_id'인 Question객체 하나만 반환한다.
 
-def answer_create(request,question_id):
+@login_required(login_url='common:login') #로그아웃 상태에서 이 함수가 호출되면 자동으로 로그인 화면으로 이동하게된다
+def answer_create(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    form = Answerform(request.POST)
-    if form.is_valid():
-        question.answer = form.save(commit=False)
-        question.answer.create_date=timezone.now()
-        question.answer.author = request.user
-        question.answer.save()
-        return redirect('pybo:detail',question_id=question.id)
+    if request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.author = request.user  # author 속성에 로그인 계정 저장
+            answer.create_date = timezone.now()
+            answer.question = question
+            answer.save()
+            return redirect('pybo:detail', question_id=question.id)
+    else:
+        form = AnswerForm()
+        context = {'question': question, 'form': form}
+        return render(request, 'pybo/question_detail.html', context)
     #question.answer_set.create(content=request.POST.get('content'),create_date=timezone.now())
     #등록한 답변 내용은 request객체를 통해 읽을 수 있다.
 #answer_set을 통해 특정 Question객체와 연결된 모든 Answer객체에 접근할수있다.
@@ -35,6 +43,7 @@ def answer_create(request,question_id):
 #필요한 '필드 값'을 인자로 받아서 자동으로 '객체'를 생성하고 저장한다 
 #redirect 함수는 페이지 이동을 위한 함수이다.
 
+@login_required(login_url='common:login')
 def question_create(request):
     if request.method == 'POST':
         form = QuestionForm(request.POST) #사용자가 제출한 폼데이터를 포함한다
@@ -54,3 +63,20 @@ def question_create(request):
 #POST방식에서는 request.POST를 인수로 생성했다.
 #request.POST에는 화면에 사용자가 입력한 내용들이 담겨있다.
 
+@login_required(login_url='common:login')
+def question_modify(request,question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    if request.user != question.author:
+        messages.error(request,'수정권한이 없습니다')
+        return redirect('pybo:detail',question_id=question.id)
+    if request.method == "POST":
+        form = QuestionForm(request.POST, instance = question) #instance를 기준으로 폼을 생성하지만, request.POST의 겂으로 덮어써라
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.modify_date = timezone.now()
+            question.save()
+            return redirect('pybo:detail',question_id=question.id)
+    else:
+        form = QuestionForm(instance=question) #form의 속성값이 instance로 채워진다
+    context = {'form':form }
+    return render(request, 'pybo/question_form.html',context)
