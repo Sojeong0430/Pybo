@@ -1,0 +1,9 @@
+<h1>Pybo</h1>
+<hr>
+<a href="{% url 'pybo:index'%}">pybo 이동하기</a><br>
+{% if user.is_authenticated %}
+{{user.username}}/<a href="{% url 'common:logout'%}">로그아웃</a>
+{% else %}
+<a href="{% url 'common:login'%}">로그인하기</a>
+<a href="{% url 'common:signup'%}">회원가입</a>
+{% endif %}

@@ -1,0 +1,9 @@
+<h5>질문 등록</h5>
+<form method='post'>
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type='submit'>저장하기</button>
+</form>
+
+<!--{{ form.as_p }}의 form은 question_create 함수에서 전달한 QuestionForm의 객체이다.-->
+<!--{{ form.as_p }}는 폼에 정의한 subject, content 속성에 해당하는 HTML 코드를 자동으로 생성한다.-->
