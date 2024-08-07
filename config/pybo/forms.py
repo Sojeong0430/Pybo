@@ -18,3 +18,11 @@ class QuestionForm(forms.ModelForm):
 #연결된 모델의 데이터를 저장할수 있는 폼이다.
 #모델 폼은 이너 클래스인 Meta 클래스가 반드시 필요하다.
 #Meta 클래스에는 사용할 모델과 모델의 속성을 적어야 한다.
+
+class Answerform(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields=['content']
+    labels={
+        'content' : '내용',
+    }

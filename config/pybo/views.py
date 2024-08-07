@@ -21,8 +21,12 @@ def detail(request,question_id):
 
 def answer_create(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
-    question.answer_set.create(content=request.POST.get('content'),create_date=timezone.now())
-    return redirect('pybo:detail',question_id=question.id)#^ 등록한 답변 내용은 request객체를 통해 읽을 수 있다.
+    
+
+
+
+    #question.answer_set.create(content=request.POST.get('content'),create_date=timezone.now())
+    #return redirect('pybo:detail',question_id=question.id)#^ 등록한 답변 내용은 request객체를 통해 읽을 수 있다.
 #answer_set을 통해 특정 Question객체와 연결된 모든 Answer객체에 접근할수있다.
 #.create()매서드는 새로운 Answer 객체를 생성하고 DB에 저장한다
 #필요한 '필드 값'을 인자로 받아서 자동으로 '객체'를 생성하고 저장한다 
