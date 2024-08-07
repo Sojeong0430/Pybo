@@ -1,7 +1,7 @@
 from django.shortcuts import render , get_object_or_404, redirect
 from .models import Question
 from django.utils import timezone
-from .forms import QuestionForm
+from .forms import QuestionForm , Answerform
 
 # Create your views here.
 
@@ -21,12 +21,15 @@ def detail(request,question_id):
 
 def answer_create(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
-    
-
-
-
+    form = Answerform(request.POST)
+    if form.is_valid():
+        question.answer = form.save(commit=False)
+        question.answer.create_date=timezone.now()
+        question.answer.author = request.user
+        question.answer.save()
+        return redirect('pybo:detail',question_id=question.id)
     #question.answer_set.create(content=request.POST.get('content'),create_date=timezone.now())
-    #return redirect('pybo:detail',question_id=question.id)#^ 등록한 답변 내용은 request객체를 통해 읽을 수 있다.
+    #등록한 답변 내용은 request객체를 통해 읽을 수 있다.
 #answer_set을 통해 특정 Question객체와 연결된 모든 Answer객체에 접근할수있다.
 #.create()매서드는 새로운 Answer 객체를 생성하고 DB에 저장한다
 #필요한 '필드 값'을 인자로 받아서 자동으로 '객체'를 생성하고 저장한다 
@@ -37,7 +40,8 @@ def question_create(request):
         form = QuestionForm(request.POST) #사용자가 제출한 폼데이터를 포함한다
         if form.is_valid(): #폼이 유효하다면(유효성 검사를 통과했다면)
             question = form.save(commit=False) #임시저장하여 question객체를 리턴받는다
-            question.create_date = timezone.now() #실제저장을 위해 작성일시를 설정한다
+            question.create_date = timezone.now()
+            question.author = request.user #실제저장을 위해 작성일시를 설정한다
             question.save() #데이터를 데이터베이스에 실제로 저장한다
             return redirect('pybo:index')
     else: #GET방식일때
