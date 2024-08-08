@@ -6,11 +6,13 @@
     {{ question.content}}
 </div>
 <br>
+<a href="{% url 'pybo:question_vote' question.id %}">추천하기</a><br>
+추천수 : {{question.voter.count}}<br><br>
+
 {% if question.author == request.user%}
 <a href="{% url 'pybo:question_modify' question.id  %}">수정하기</a><br>
 <a href="{% url 'pybo:question_delete' question.id  %}">삭제하기</a>
 {%endif%}
-
 <h5>{{question.answer_set.count}}개의 답변이 있습니다.</h5>
 
 <div>
@@ -27,3 +29,5 @@
     name="content" id="content" rows="10"></textarea>
     <input type="submit" value="답변등록">
 </form>
+<br><br>
+<a href="{% url 'pybo:index' %}">돌아가기</a>

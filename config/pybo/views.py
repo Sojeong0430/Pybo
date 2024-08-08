@@ -90,3 +90,14 @@ def question_delete(request,question_id):
     else:
         question.delete()
         return redirect('pybo:index')
+
+@login_required(login_url='common:login')
+def question_vote(request,question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    if request.user == question.author:
+        messages.error(request, '본인이 작성한 글은 추천할 수 없습니다')
+    else:
+        question.voter.add(request.user)
+    return redirect('pybo:detail',question_id=question.id)
+#Question모델의 voter는 여러사람을 추가할 수 있는 ManyToMany이므로,
+#question.voter.add(request.user)처럼 add함수를 사용하여 추천인을 추가한다

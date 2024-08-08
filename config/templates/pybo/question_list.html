@@ -1,3 +1,5 @@
+<input type="text" id="search_kw" class="form-control" value="{{ kw|default_if_none:'' }}">
+<button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
 {% if list %} <!--question_list가 있다면-->
     <ul>
     {% for question in list %} <!--question_list를 순회하면서 하나씩 question에 대입-->
