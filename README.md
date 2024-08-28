@@ -1,2 +1,2 @@
 # pybo
-Django 실습 게시판 미니프로젝트 
+Django 연습 게시판 구현해보기
